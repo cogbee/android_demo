@@ -1,4 +1,7 @@
-package com.example.demo;
+package eachdemo;
+
+import com.example.demo.MainActivity;
+import com.example.demo.R;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
@@ -8,29 +11,35 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import eachdemo.login;
 
-
-public class MainActivity extends ActionBarActivity {
-	Button login;
+public class login extends ActionBarActivity {
+	EditText login_name;
+	EditText login_pass;
+	Button login_now;
+	String login_name_str;
+	String login_pass_str;
+	final String Tag = "jaffer";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        login = (Button)findViewById(R.id.login);
-        login.setOnClickListener(new OnClickListener(){
-
+        setContentView(R.layout.login);
+        login_name = (EditText)findViewById(R.id.login_name_edt);             
+        login_pass = (EditText)findViewById(R.id.login_pwd_edt);       
+        login_now = (Button)findViewById(R.id.login_login_btn);
+        login_now.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(MainActivity.this, login.class);
-				startActivity(intent);
+				login_pass_str = login_pass.getText().toString();
+				login_name_str = login_name.getText().toString();
+		        Toast.makeText(getApplicationContext(), "user:"+ login_name_str + "pass:" + login_pass_str,Toast.LENGTH_SHORT).show();  
 			}
         	
         });
-        
     }
 
 
