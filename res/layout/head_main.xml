@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+   >
+	<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/header"
+            android:orientation="vertical"
+            android:paddingTop="26dp"
+            android:paddingRight="32dp" 
+            android:paddingLeft="32dp" >
+            
+	    	<ImageView
+                android:id="@+id/myPage_headview"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:gravity="center"
+                android:background="@drawable/head_default" />
+	    
+            <Button
+                android:id="@+id/get_head"
+                android:layout_width="match_parent"
+                android:layout_height="40.0dp"
+                android:background="#ff0000"
+                android:gravity="center"
+                android:text="头像"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />      
+	</LinearLayout>
+</LinearLayout>

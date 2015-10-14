@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,11 +10,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import eachdemo.login;
+import eachdemo.*;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 	Button login;
+	Button head;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,18 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(MainActivity.this, login.class);
+				startActivity(intent);
+			}
+        	
+        });
+        
+        head = (Button)findViewById(R.id.head);
+        head.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(MainActivity.this, head.class);
 				startActivity(intent);
 			}
         	

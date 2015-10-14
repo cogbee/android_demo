@@ -4,6 +4,7 @@ import com.example.demo.MainActivity;
 import com.example.demo.R;
 
 import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,7 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-public class login extends ActionBarActivity {
+public class login extends Activity {
 	EditText login_name;
 	EditText login_pass;
 	Button login_now;
