@@ -1,15 +1,17 @@
 package eachdemo;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
-import com.example.demo.MainActivity;
 import com.example.demo.R;
 import com.example.util.SelectPicPopupWindow;
 
-import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -18,12 +20,9 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -39,7 +38,7 @@ public class head extends Activity {
 	
 	private ImageView mImageHeader;
 	
-	private static final String IMAGE_FILE_NAME = "family_header.jpg";
+	private static String IMAGE_FILE_NAME = "family_header.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +46,7 @@ public class head extends Activity {
         setContentView(R.layout.head_main);
         mImageHeader = (ImageView)findViewById(R.id.myPage_headview);
         head = (Button)findViewById(R.id.get_head);
+        init(mImageHeader, IMAGE_FILE_NAME);
         mImageHeader.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -57,13 +57,24 @@ public class head extends Activity {
 				menuWindow.showAtLocation(head.this.findViewById(R.id.header), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
 				//设置layout在PopupWindow中显示的位置               
 			}
-        	
         });
+    }
+    
+    //file to bitmap
+    public void init(ImageView mImageHeader, String location){
+    	String abLocation = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + location;
+    	Log.d("test", abLocation);
+    	Bitmap bitmap = null;  
+    	File file = new File(abLocation);  
+		if(file.exists())  
+		{  
+		    bitmap = BitmapFactory.decodeFile(abLocation);
+		    mImageHeader.setImageBitmap(bitmap);
+		}
     }
     
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	Log.d("jaffer","-1:"+resultCode+""+"::::"+requestCode+"");
 		switch (requestCode) {
 		case 0:
 		case 1:
@@ -81,6 +92,7 @@ public class head extends Activity {
 						if (image != null) {
 							Log.d("jaffer","3");
 							mImageHeader.setImageBitmap(image);
+							save(image);
 						}
 					} catch (Exception e) {
 						Log.d("jaffer","4");
@@ -94,6 +106,7 @@ public class head extends Activity {
 						Bitmap image = extras.getParcelable("data");
 						if (image != null) {
 							mImageHeader.setImageBitmap(image);
+							save(image);
 						}
 					}
 				}
@@ -104,6 +117,21 @@ public class head extends Activity {
 
 		}
 	}
+    
+    //bitmap to file
+    public void save(Bitmap bitmap){
+    	String abLocation = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + IMAGE_FILE_NAME;
+    	File file=new File(abLocation);
+    	try {
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+    	} catch (IOException e) {
+            e.printStackTrace();
+    }
+    	
+    }
 	
     
   //为弹出窗口实现监听类
