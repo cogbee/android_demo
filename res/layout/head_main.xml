@@ -11,7 +11,7 @@
             android:orientation="vertical"
             android:paddingTop="26dp"
             android:paddingRight="32dp" 
-            android:paddingLeft="32dp" >
+            android:paddingLeft="32dp">
             
 	    	<ImageView
                 android:id="@+id/myPage_headview"

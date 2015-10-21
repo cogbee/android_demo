@@ -1,6 +1,8 @@
 package eachdemo;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -35,6 +38,9 @@ public class head extends Activity {
 	private static final int IMAGE_REQUEST_CODE = 0;
 	private static final int CAMERA_REQUEST_CODE = 1;
 	private static final int RESIZE_REQUEST_CODE = 2;
+
+	public static final float DISPLAY_WIDTH = 200;
+	public static final float DISPLAY_HEIGHT = 200;
 	
 	private ImageView mImageHeader;
 	
@@ -45,6 +51,7 @@ public class head extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.head_main);
         mImageHeader = (ImageView)findViewById(R.id.myPage_headview);
+        mImageHeader.setScaleType(ImageView.ScaleType.FIT_XY);
         head = (Button)findViewById(R.id.get_head);
         init(mImageHeader, IMAGE_FILE_NAME);
         mImageHeader.setOnClickListener(new OnClickListener(){
@@ -77,7 +84,6 @@ public class head extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case 0:
-		case 1:
 			if (data != null) {
 				//取得返回的Uri,基本上选择照片的时候返回的是以Uri形式，但是在拍照中有得机子呢Uri是空的，所以要特别注意
 				Uri mImageCaptureUri = data.getData();
@@ -98,18 +104,40 @@ public class head extends Activity {
 						Log.d("jaffer","4");
 						e.printStackTrace();
 					}
-				} else {
-					Log.d("jaffer","2");
-					Bundle extras = data.getExtras();
-					if (extras != null) {
-						//这里是有些拍照后的图片是直接存放到Bundle中的所以我们可以从这里面获取Bitmap图片
-						Bitmap image = extras.getParcelable("data");
-						if (image != null) {
-							mImageHeader.setImageBitmap(image);
-							save(image);
-						}
-					}
 				}
+			}
+			break;
+		case 1:
+			if (data != null){
+			Uri uri = data.getData();  
+		    if(uri == null){  
+		           //use bundle to get data  
+		       Bundle bundle = data.getExtras();    
+               if (bundle != null) {                 
+            	   Bitmap  photo = (Bitmap) bundle.get("data"); //get bitmap  
+            	   //spath :生成图片取个名字和路径包含类型                              
+            	   String loc = save(photo);
+            	   mImageHeader.setImageBitmap(decodeBitmap(loc));
+               } else {           
+                   Toast.makeText(getApplicationContext(), "err****", Toast.LENGTH_LONG).show();           
+                return;        
+                }    
+		       }else{  
+		    	   Bitmap image;
+					try {
+						Log.d("jaffer","1");
+						//这个方法是根据Uri获取Bitmap图片的静态方法
+						image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+						if (image != null) {
+							Log.d("jaffer","3");
+							String loc = save(image);
+							mImageHeader.setImageBitmap(decodeBitmap(loc));
+						}
+					} catch (Exception e) {
+						Log.d("jaffer","4");
+						e.printStackTrace();
+					}
+		       } 
 			}
 			break;
 		default:
@@ -119,7 +147,7 @@ public class head extends Activity {
 	}
     
     //bitmap to file
-    public void save(Bitmap bitmap){
+    public String save(Bitmap bitmap){
     	String abLocation = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + IMAGE_FILE_NAME;
     	File file=new File(abLocation);
     	try {
@@ -129,9 +157,31 @@ public class head extends Activity {
             bos.close();
     	} catch (IOException e) {
             e.printStackTrace();
+    	}
+    	return abLocation;
     }
-    	
-    }
+    
+    private Bitmap decodeBitmap(String path){
+    	  BitmapFactory.Options op = new BitmapFactory.Options();
+    	  //inJustDecodeBounds 
+    	  //If set to true, the decoder will return null (no bitmap), but the out…
+    	  op.inJustDecodeBounds = true;
+    	  Bitmap bmp = BitmapFactory.decodeFile(path, op); //获取尺寸信息
+    	  //获取比例大小
+    	  int wRatio = (int)Math.ceil(op.outWidth/DISPLAY_WIDTH);
+    	  int hRatio = (int)Math.ceil(op.outHeight/DISPLAY_HEIGHT);
+    	  //如果超出指定大小，则缩小相应的比例
+    	  if(wRatio > 1 && hRatio > 1){
+    	    if(wRatio > hRatio){
+    	      op.inSampleSize = wRatio;
+    	    }else{
+    	      op.inSampleSize = hRatio;
+    	    }
+    	  }
+    	  op.inJustDecodeBounds = false;
+    	  bmp = BitmapFactory.decodeFile(path, op);
+    	  return bmp;
+    	}
 	
     
   //为弹出窗口实现监听类
@@ -146,12 +196,15 @@ public class head extends Activity {
 				startActivityForResult(galleryIntent, IMAGE_REQUEST_CODE);
 				break;
 			case R.id.btn_take_photo:
+				Log.d("test","sdcard");
 				if (isSdcardExisting()) {
+					Log.d("test","sdcard");
 					Intent cameraIntent = new Intent(
 							"android.media.action.IMAGE_CAPTURE");
 					cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, getImageUri());
 					cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
 					startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+					Log.d("test","sdcard");
 				} else {
 					Toast.makeText(v.getContext(), "请插入sd卡", Toast.LENGTH_LONG)
 							.show();
@@ -199,6 +252,7 @@ public class head extends Activity {
 		return Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
 				IMAGE_FILE_NAME));
 	}
+	
 
 
  
