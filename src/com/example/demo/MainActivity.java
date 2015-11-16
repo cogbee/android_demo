@@ -16,6 +16,7 @@ import eachdemo.*;
 public class MainActivity extends Activity {
 	Button login;
 	Button head;
+	Button serviceButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,18 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(MainActivity.this, head.class);
+				startActivity(intent);
+			}
+        	
+        });
+        
+        serviceButton = (Button)findViewById(R.id.serviceButton);
+        serviceButton.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(MainActivity.this, myServices.class);
 				startActivity(intent);
 			}
         	

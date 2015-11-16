@@ -24,10 +24,10 @@
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 			        android:text="头像"/>
-			    <Button android:id="@+id/ok3"
+			    <Button android:id="@+id/serviceButton"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:text="login2"/>
+			        android:text="服务"/>
 			    <Button android:id="@+id/ok4"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"

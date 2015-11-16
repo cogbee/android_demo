@@ -28,6 +28,10 @@
         <activity android:name="eachdemo.head" ></activity>
         
         <activity android:name="com.example.util.SelectPicPopupWindow" ></activity>
+        <activity android:name="eachdemo.myServices" ></activity>
+        
+        <service android:name="eachdemo.myService">              
+		</service> 
     </application>
 
 </manifest>

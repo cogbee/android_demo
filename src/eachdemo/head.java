@@ -253,7 +253,5 @@ public class head extends Activity {
 				IMAGE_FILE_NAME));
 	}
 	
-
-
  
 }
